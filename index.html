@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧠 Getting Unstuck</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+
+    .step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-question {
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .radio-option input[type="radio"] {
+      margin-top: 2px;
+      margin-right: 12px;
+      cursor: pointer;
+      accent-color: #667eea;
+    }
+
+    .radio-option.selected {
+      border-color: #667eea;
+      background: #f0f2ff;
+    }
+
+    .radio-label {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .radio-label strong {
+      display: block;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .radio-label span {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .idea-input {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 8px;
+      transition: border-color 0.2s ease;
+    }
+
+    .idea-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f0f2ff;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #e8ebff;
+    }
+
+    .result {
+      display: none;
+      background: #f8f9ff;
+      border: 2px solid #e8ebff;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 30px;
+    }
+
+    .result.active {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-section {
+      margin-bottom: 20px;
+    }
+
+    .result-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #667eea;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .result-content {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .result-oneliner {
+      font-size: 18px;
+      font-weight: 600;
+      color: #764ba2;
+      padding: 16px;
+      background: white;
+      border-left: 4px solid #764ba2;
+      border-radius: 4px;
+    }
+
+    .copy-btn {
+      background: #667eea;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #764ba2;
+    }
+
+    .copy-btn.copied {
+      background: #4caf50;
+    }
+
+    .step-counter {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #999;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .why-counter {
+      font-size: 12px;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .reset-btn {
+      background: #f0f2ff;
+      color: #667eea;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .reset-btn:hover {
+      background: #e8ebff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🧠 Getting Unstuck</h1>
+    <p>Turn your problem into an idea</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- STEP 1: Define Problem -->
+  <div class="step active" id="step1">
+    <div class="step-counter">Step 1 of 8</div>
+    <div class="step-title">The Mess</div>
+    <div class="step-question">What's your problem in one sentence?</div>
+    <div class="form-group">
+      <textarea id="problem" placeholder="Write the core problem you're stuck on..."></textarea>
+      <p class="help-text">Be specific. What's the actual challenge?</p>
+    </div>
+  </div>
+
+  <!-- STEP 2: Reframe -->
+  <div class="step" id="step2">
+    <div class="step-counter">Step 2 of 8</div>
+    <div class="step-title">Reframe the Problem</div>
+    <div class="step-question">Complete these sentences:</div>
+    <div class="form-group">
+      <label>I wish that…</label>
+      <textarea id="wish" placeholder="What would you like to be true instead?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Wouldn't it be great if…</label>
+      <textarea id="wouldnt" placeholder="What would make this problem disappear?"></textarea>
+    </div>
+  </div>
+
+  <!-- STEP 3: Five Whys -->
+  <div class="step" id="step3">
+    <div class="step-counter">Step 3 of 8</div>
+    <div class="step-title">Five Whys</div>
+    <div class="step-question">Go deeper. Ask why 5 times.</div>
+    <div id="whyContainer"></div>
+  </div>
+
+  <!-- STEP 4: Reframe Angles -->
+  <div class="step" id="step4">
+    <div class="step-counter">Step 4 of 8</div>
+    <div class="step-title">Explore Angles</div>
+    <div class="step-question">Answer from different perspectives:</div>
+    <div class="form-group">
+      <label>Opposite: What if the opposite were true?</label>
+      <textarea id="opposite" placeholder="Flip the problem on its head..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Extreme: What's the most extreme version?</label>
+      <textarea id="extreme" placeholder="Take it to the extreme..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Different World: How would this work in a different world?</label>
+      <textarea id="differentWorld" placeholder="Imagine a different context, industry, or time..."></textarea>
+    </div>
+  </div>
+
+  <!-- STEP 5: Generate Ideas -->
+  <div class="step" id="step5">
+    <div class="step-counter">Step 5 of 8</div>
+    <div class="step-title">Generate Ideas</div>
+    <div class="step-question">Write 5 quick ideas (don't overthink):</div>
+    <div id="ideaContainer"></div>
+  </div>
+
+  <!-- STEP 6: Choose Best Idea -->
+  <div class="step" id="step6">
+    <div class="step-counter">Step 6 of 8</div>
+    <div class="step-title">Pick Your Best Idea</div>
+    <div class="step-question">Which idea feels strongest?</div>
+    <div class="radio-group" id="ideaChoices"></div>
+  </div>
+
+  <!-- STEP 7: Hook / Twist / Punch -->
+  <div class="step" id="step7">
+    <div class="step-counter">Step 7 of 8</div>
+    <div class="step-title">Refine the Idea</div>
+    <div class="step-question">Structure it with Hook / Twist / Punch:</div>
+    <div class="form-group">
+      <label>Hook: What grabs attention?</label>
+      <textarea*
+
